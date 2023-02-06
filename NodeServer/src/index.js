@@ -16,9 +16,10 @@ const { authenticator } = require("./auth/auth.middleaware");
 
 app.use(express.json());
 
-app.use(express.static(path.resolve(__dirname, "./clients")));
+app.use(express.static(path.resolve(__dirname, "./new_clients")));
 app.get("/client", authenticator, (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./clients/client.html"));
+  // res.sendFile(path.resolve(__dirname, "./clients/client.html"));
+  res.sendFile(path.resolve(__dirname, "./new_clients/dynamic_clients.html"));
 });
 
 const httpsServer = https
