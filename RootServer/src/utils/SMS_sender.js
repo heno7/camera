@@ -23,15 +23,21 @@ function generatePassCode() {
   return passCode;
 }
 
-function sendPassCode(to, passCode) {
+async function sendPassCode(to, passCode) {
   customerPhone = "+84" + to.slice(1);
-  client.messages
-    .create({
-      body: passCode,
-      from: "+15304643977",
-      to: customerPhone,
-    })
-    .then((message) => console.log(message.sid));
+  // client.messages
+  //   .create({
+  //     body: passCode,
+  //     from: "+15304643977",
+  //     to: customerPhone,
+  //   })
+  //   .then((message) => console.log(message.sid));
+  const message = await client.messages.create({
+    body: passCode,
+    from: "+15304643977",
+    to: customerPhone,
+  });
+  return message;
 }
 
 module.exports = { generatePassCode, sendPassCode };

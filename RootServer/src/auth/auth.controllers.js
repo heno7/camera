@@ -17,8 +17,10 @@ module.exports = {
         return res.status(400).json({ message: "Invalide phone number!" });
       const passCode = SMS.generatePassCode();
       await savePassCode(user.id, passCode);
-      SMS.sendPassCode(phoneNumber, passCode);
-      res.send("Test");
+      await SMS.sendPassCode(phoneNumber, passCode);
+      return res.status(201).json({
+        message: "We haved sent you a passcode. Please check your phone!",
+      });
     } catch (error) {
       next(error);
     }
@@ -47,7 +49,7 @@ module.exports = {
 
       return res.status(201).json({
         domain: user.homeServer.domain,
-        accessToken: accessToken,
+        tk: accessToken,
       });
     } catch (error) {
       next(error);

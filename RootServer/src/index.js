@@ -13,6 +13,10 @@ app.use(express.static(path.resolve("src/clients")));
 
 const authRoutes = require("./auth/auth.routes");
 
+app.get("/", (req, res) => {
+  res.redirect("/index.html");
+});
+
 app.use("/auth", authRoutes);
 
 app.listen(3333, () => {

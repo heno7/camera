@@ -11,7 +11,9 @@ const serverId = "123";
 module.exports = {
   authenticator: async (req, res, next) => {
     try {
-      const { accessToken } = req.body;
+      const accessToken = req.query.tk;
+      // console.log(req.query);
+      // console.log(accessToken);
       if (!accessToken)
         return res.status(401).json({ message: "Access denied!" });
       const payload = await verifyPromise(accessToken, cert);

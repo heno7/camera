@@ -8,8 +8,31 @@
   </head>
   <body>
     <form action="/auth/login" method="post">
-      <label for="passcode">Enter your phone number:</label>
+      <label for="passcode">Enter your passcode:</label>
       <input type="text" name="passCode" id="passcode" />
+      <button type="submit">Submit</button>
     </form>
+    <script>
+      const form = document.querySelector("form");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          const passCode = document.getElementById("passcode").value;
+          console.log(passCode);
+          const result = await fetch("/auth/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              passCode: passCode,
+            }),
+          });
+          const data = await result.json();
+          console.log(data.tk);
+          window.location.href = `https://${data.domain}/client?tk=${data.tk}`;
+        } catch (error) {}
+      });
+    </script>
   </body>
 </html>

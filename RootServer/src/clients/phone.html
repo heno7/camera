@@ -12,5 +12,27 @@
       <input type="text" name="phoneNumber" id="phone" />
       <button type="submit">GET PASSCODE</button>
     </form>
+    <script>
+      const form = document.querySelector("form");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          const phoneNumber = document.getElementById("phone").value;
+          console.log(phoneNumber);
+          const result = await fetch("/auth/passcode", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              phoneNumber: phoneNumber,
+            }),
+          });
+          const data = await result.json();
+          console.log(data.message);
+          window.location.href = "/passcode.html";
+        } catch (error) {}
+      });
+    </script>
   </body>
 </html>
