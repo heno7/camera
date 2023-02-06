@@ -1,0 +1,23 @@
+{
+  "name": "test-esp32-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ffmpeg-static": "^5.1.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "greenlock-express": "^4.0.3",
+    "javascript-binary-converter": "^1.0.0",
+    "ws": "^8.12.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}

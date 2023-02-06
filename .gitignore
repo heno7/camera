@@ -1,0 +1,7 @@
+NodeServer/certificates/*
+NodeServer/greenlock.d/*
+NodeServer/node_modules
+
+RootServer/node_modules
+RootServer/.env
+RootServer/src/jwt
