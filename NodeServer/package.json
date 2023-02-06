@@ -15,6 +15,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "greenlock-express": "^4.0.3",
     "javascript-binary-converter": "^1.0.0",
+    "jsonwebtoken": "^9.0.0",
     "ws": "^8.12.0"
   },
   "devDependencies": {

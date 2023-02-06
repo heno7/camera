@@ -31,18 +31,22 @@ module.exports = {
       if (!isValidPassCode) {
         return res.status(401).json({ message: "Invalide passcode!" });
       }
-      const user = findUserById(isValidPassCode.userId);
+
+      // console.log(isValidPassCode);
+      const user = await findUserById(isValidPassCode.userId);
 
       const accessToken = await JWT.generateToken(
         {
-          homeServerId: user.homeServerId,
+          homeServerId: user.homeServer.id,
         },
         config.JWT_PRIVATE_KEY,
         { algorithm: config.JWT_ALG, expiresIn: config.JWT_ACCESS_TOKEN_EXPIRE }
       );
 
+      // console.log(user);
+
       return res.status(201).json({
-        domain: user.domain,
+        domain: user.homeServer.domain,
         accessToken: accessToken,
       });
     } catch (error) {

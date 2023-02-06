@@ -39,8 +39,10 @@ async function savePassCode(userId, passCode) {
 
 async function checkPassCode(passCode) {
   try {
-    const passCode = await PassCode.findOne({ passCode }).populate("userId");
-    if (passCode) return true;
+    const existPassCode = await PassCode.findOne({ passCode }).populate(
+      "userId"
+    );
+    if (existPassCode) return existPassCode;
     return false;
   } catch (error) {
     throw error;

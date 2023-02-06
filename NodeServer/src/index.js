@@ -1,27 +1,25 @@
 const path = require("path");
 const fs = require("fs");
-// const http = require("http");
 const https = require("https");
 const express = require("express");
 const { WebSocketServer } = require("ws");
 
-const frameStream = require("./frameStream");
-const Saver = require("./saver");
+const frameStream = require("../frameStream");
+const Saver = require("../saver");
 
 const saver = new Saver("camera.mp4", frameStream);
 const app = express();
 
-// const HTTP_PORT = 80;
 const HTTPS_PORT = 443;
 
-app.use(express.static("."));
-app.get("/client", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./client.html"));
-});
+const { authenticator } = require("./auth/auth.middleaware");
 
-// const httpServer = http.createServer(app).listen(HTTP_PORT, () => {
-//   console.log("Server is running...");
-// });
+app.use(express.json());
+
+app.use(express.static(path.resolve(__dirname, "./clients")));
+app.get("/client", authenticator, (req, res) => {
+  res.sendFile(path.resolve(__dirname, "./clients/client.html"));
+});
 
 const httpsServer = https
   .createServer(
