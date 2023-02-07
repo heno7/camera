@@ -117,7 +117,7 @@ void webSocketConnect(){
     Serial.print("Failed to connect websocket\n");
   }
   Serial.println("Websocket Connected!");
-  client.send("Camera");
+  client.send("Camera_01");
 }
 
 void loop() {

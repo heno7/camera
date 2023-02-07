@@ -4,47 +4,28 @@ const https = require("https");
 const express = require("express");
 const { WebSocketServer } = require("ws");
 
-const frameStream = require("../frameStream");
-const Saver = require("../saver");
+// const frameStream = require("./recorders/frameStream");
+// const Saver = require("./recorders/saver");
 
-const saver = new Saver("camera.mp4", frameStream);
+// const saver = new Saver("camera.mp4", frameStream);
+
+const recoders = require("./recorders");
+
+(async () => {
+  await recoders.init();
+})();
+
 const app = express();
 
 const HTTPS_PORT = 443;
 
-const { authenticator } = require("./auth/auth.middleaware");
+const router = require("./routes");
 
 app.use(express.json());
 
 app.use(express.static(path.resolve(__dirname, "./new_clients")));
-app.get("/client", authenticator, (req, res) => {
-  // res.sendFile(path.resolve(__dirname, "./clients/client.html"));
-  res.sendFile(path.resolve(__dirname, "./new_clients/dynamic_clients.html"));
-});
 
-app.get("/config", authenticator, (req, res, next) => {
-  fs.readFile(
-    path.resolve(__dirname, "./config/camera.config.json"),
-    (err, data) => {
-      if (err) next(err);
-      return res.status(200).json({ config: JSON.parse(data) });
-    }
-  );
-});
-
-app.post("/config", authenticator, (req, res, next) => {
-  const config = req.body.config;
-  const pathToConfig = path.resolve(__dirname, "./config/camera.config.json");
-  fs.readFile(pathToConfig, (err, data) => {
-    if (err) next(err);
-    const oldConfig = JSON.parse(data);
-    const newConfig = { ...oldConfig, config };
-    fs.writeFile(pathToConfig, JSON.stringify(newConfig), (err) => {
-      if (err) return next(err);
-      return res.status(200).json({ newConfig });
-    });
-  });
-});
+app.use("/", router);
 
 app.use((err, req, res, next) => {
   console.log(err);
@@ -71,25 +52,30 @@ wssServer.on("connection", (ws, req) => {
   console.log("Connected");
 
   ws.on("message", (data) => {
-    checkTypeOfClient(ws, data);
-
+    const type = checkTypeOfClient(ws, data);
+    if (type === "camera") return;
+    if (type === "client") return;
     connectedClients.forEach((ws, i) => {
       if (connectedClients[i] == ws && ws.readyState === ws.OPEN) {
         ws.send(data);
-        frameStream.push(data);
+        // frameStream.push(data);
+        recoders.routing(data);
       } else {
         connectedClients.splice(i, 1);
       }
     });
   });
 
-  ws.on("close", () => {
+  ws.on("close", function () {
     if (connectedClients.includes(this)) {
       console.log("A client is exited!");
+      connectedClients.splice(connectedClients.indexOf(this), 1);
+      recoders.close(connectedCameras);
       return;
     }
     console.log("A camera is disconnected!");
-    frameStream.push(null);
+    // frameStream.push(null);
+    recoders.close(connectedCameras);
   });
 
   ws.on("error", (error) => {
@@ -101,20 +87,23 @@ function checkTypeOfClient(ws, data) {
   if (data.indexOf("WEB_CLIENT") !== -1) {
     connectedClients.push(ws);
     console.log("Client connected");
-    return;
+    return "client";
   }
   if (data.indexOf("Camera") !== -1) {
+    ws.camId = data.slice(7, 9).toString();
+    // console.log(ws.camId);
     connectedCameras.push(ws);
     console.log("Camera connected");
-    runSaver();
-    return;
+    // runSaver();
+    recoders.run(connectedCameras);
+    return "camera";
   }
 }
 
-function runSaver() {
-  if (connectedCameras.length > 0 && !saver.isSaving) {
-    console.log("Hello");
-    saver.save();
-    saver.isSaving = true;
-  }
-}
+// function runSaver() {
+//   if (connectedCameras.length > 0 && !saver.isSaving) {
+//     console.log("Hello");
+//     saver.save();
+//     saver.isSaving = true;
+//   }
+// }
