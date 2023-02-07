@@ -1,6 +1,12 @@
 const WSS_URL = "wss://testfirst.ddns.net";
 const ws = new WebSocket(WSS_URL);
 
+window.addEventListener("load", (e) => {
+  let params = new URL(document.location).searchParams;
+  let tk = params.get("tk");
+  sessionStorage.setItem("tk", tk);
+});
+
 ws.onopen = () => {
   console.log(`Connected to ${WSS_URL}`);
   ws.send("WEB_CLIENT");

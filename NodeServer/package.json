@@ -4,14 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "cross-env FFMPEG_PATH='C:\\Final\\test-esp32-project\\NodeServer\\node_modules\\ffmpeg-static\\ffmpeg.exe' nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cross-env": "7.0.3",
     "express": "^4.18.2",
     "ffmpeg-static": "^5.1.0",
+    "ffmpeg-stream": "^0.7.0",
+    "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.2",
     "greenlock-express": "^4.0.3",
     "javascript-binary-converter": "^1.0.0",

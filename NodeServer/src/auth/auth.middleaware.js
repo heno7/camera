@@ -8,6 +8,12 @@ const cert = fs.readFileSync(path.resolve("src/auth", "public.pem")); // get pub
 
 const serverId = "123";
 
+function handleTokenError(error, res) {
+  if (error.name === "TokenExpiredError") {
+    return res.status(400).json({ message: "you must provide valid passcode" });
+  }
+}
+
 module.exports = {
   authenticator: async (req, res, next) => {
     try {

@@ -1,9 +1,7 @@
 const { Readable } = require("stream");
 
 const frameStream = new Readable({
-  read() {
-    console.log("Here");
-  },
+  read() {},
 });
 
 module.exports = frameStream;

@@ -1,17 +1,24 @@
 const ffmpegStatic = require("ffmpeg-static");
+const ffprobe = require("ffprobe-static");
 const ffmpeg = require("fluent-ffmpeg");
 
 // Tell fluent-ffmpeg where it can find FFmpeg
 ffmpeg.setFfmpegPath(ffmpegStatic);
+ffmpeg.setFfprobePath(ffprobe.path);
 
+// ffmpeg.ffprobe("./video.mp4", function (err, metadata) {
+//   console.dir(metadata);
+// });
+const path = require("path");
 // Run FFmpeg
 ffmpeg()
   // FFmpeg expects your frames to be named like frame-001.png, frame-002.png, etc.
-  .input("frame-001.png")
+  .input("frame-002.png")
 
   // Tell FFmpeg to import the frames at 10 fps
   .inputOptions("-framerate", "10")
 
+  .input("video.mp4")
   // Use the x264 video codec
   .videoCodec("libx264")
 
@@ -20,7 +27,7 @@ ffmpeg()
   .outputOptions("-pix_fmt", "yuv420p")
 
   // Output file
-  .saveToFile("video.mp4")
+  .mergeToFile("video2.mp4", path.resolve("./store/"))
 
   // Log the percentage of work completed
   .on("progress", (progress) => {
