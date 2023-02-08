@@ -15,7 +15,7 @@ module.exports = {
       // console.log(__filename);
       // console.log(__dirname);
       this.listOfStores[camId] = path.join(
-        path.resolve("store", `store_${camId}`),
+        path.resolve("store", `raw_store_${camId}`),
         `${time}_${camId}.mp4`
       );
       console.log(this.listOfStores[camId]);
