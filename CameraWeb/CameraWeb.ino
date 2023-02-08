@@ -117,7 +117,7 @@ void webSocketConnect(){
     Serial.print("Failed to connect websocket\n");
   }
   Serial.println("Websocket Connected!");
-  client.send("Camera_01");
+  client.send("Camera_02");
 }
 
 void loop() {
@@ -140,8 +140,8 @@ void loop() {
     return;
   }
   
-  fb->buf[12] = 0x01; //FIRST CAM
-  // fb->buf[12] = 0x02; //SECOND CAM
+  // fb->buf[12] = 0x01; //FIRST CAM
+  fb->buf[12] = 0x02; //SECOND CAM
 
   client.sendBinary((const char*) fb->buf, fb->len);
   esp_camera_fb_return(fb);

@@ -27,7 +27,7 @@ class Saver {
       vcodec: "mjpeg",
       r: 30,
     });
-    converter.createOutputToFile("out.mp4", {
+    converter.createOutputToFile(this.store, {
       vcodec: "libx264",
       pix_fmt: "yuv420p",
     });
@@ -40,6 +40,7 @@ class Saver {
     });
 
     await convertingFinished;
+    console.log("Done!");
   }
 }
 

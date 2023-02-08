@@ -55,11 +55,12 @@ wssServer.on("connection", (ws, req) => {
     const type = checkTypeOfClient(ws, data);
     if (type === "camera") return;
     if (type === "client") return;
+    recoders.routing(data);
     connectedClients.forEach((ws, i) => {
       if (connectedClients[i] == ws && ws.readyState === ws.OPEN) {
         ws.send(data);
         // frameStream.push(data);
-        recoders.routing(data);
+        // recoders.routing(data);
       } else {
         connectedClients.splice(i, 1);
       }
@@ -95,7 +96,8 @@ function checkTypeOfClient(ws, data) {
     connectedCameras.push(ws);
     console.log("Camera connected");
     // runSaver();
-    recoders.run(connectedCameras);
+    recoders.setDuration(60 * 1000, connectedCameras).run(connectedCameras);
+    // recoders.run(connectedCameras);
     return "camera";
   }
 }
