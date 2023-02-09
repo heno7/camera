@@ -3,6 +3,7 @@ window.addEventListener("load", async (e) => {
   let tk = params.get("tk");
   sessionStorage.setItem("tk", tk);
   const config = await getConfigs();
+  window.config = config;
   setFalseCamEnabler(config);
   renderCamViews(config);
   getCamViews(config);
@@ -65,15 +66,14 @@ function generateCamView(info) {
    id="cam_${info.cameraId}_enabler"
    onclick="buttonFunc('cam_${info.cameraId}_enabler')"
  >
-   Play
+   play
  </button>
  <button
-   class="button"
+   class="button button-save"
    id="cam_${info.cameraId}_save"
    onclick="saveFunc('cam_${info.cameraId}_enabler')"
-   style="background-color: #008cba"
  >
-   Save to Image
+   save to image
  </button>
 </div>`;
   return html;

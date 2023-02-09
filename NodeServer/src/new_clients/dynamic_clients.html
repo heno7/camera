@@ -12,13 +12,22 @@
     <title>Web browser Client</title>
   </head>
   <body>
-    <h1>Home</h1>
-    <div id="nav">
-      <h2>Record</h2>
-      <h2>Now</h2>
-      <h2>Config</h2>
+    <div id="static-head">
+      <h1 id="home">Home</h1>
+      <div id="nav">
+        <h2 id="record">Record</h2>
+        <h2 id="now">Now</h2>
+        <h2 id="config">Config</h2>
+      </div>
+    </div>
+    <div id="padding"></div>
+    <div id="record-container">
+      <div id="room-lists"></div>
+      <div id="record-views"></div>
     </div>
     <div class="cards" id="views"></div>
+
     <script src="dynamic_clients.js"></script>
+    <script src="show_records.js"></script>
   </body>
 </html>

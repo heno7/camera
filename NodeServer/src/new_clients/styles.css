@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Quicksand&display=swap");
 
 html {
-  font-size: 22px;
+  font-size: 1.5rem;
   background-color: rgb(169, 172, 174);
 }
 
@@ -16,19 +16,49 @@ body {
   padding: 1rem;
 }
 
+#static-head {
+  position: fixed;
+  width: 100%;
+  left: 0;
+}
+
+#padding {
+  width: 100%;
+  height: 22vh;
+  background-color: rgb(169, 172, 174);
+}
+
+#record-container {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto 0 auto;
+  display: flex;
+  justify-content: flex-start;
+}
+
+#home {
+  margin-top: 0;
+}
+
 #nav {
   max-width: 1400px;
-  background-color: #f44336;
+  /* background-color: #f44336; */
   display: flex;
   justify-content: space-between;
   margin: 0 auto 0 auto;
+  border-radius: 1rem;
 }
 
 #nav h2 {
   width: 33%;
+  background-color: rgb(29, 179, 144);
+  margin-top: 0;
+  margin-bottom: 0;
+  border-radius: 1rem;
   display: flex;
   justify-content: center;
   cursor: pointer;
+  font-size: 1.5rem;
 }
 
 #nav h2:hover {
@@ -51,6 +81,8 @@ body {
 }
 
 .button {
+  font-family: "Quicksand", sans-serif;
+  border-radius: 1rem;
   background-color: #f44336;
   border: none;
   color: white;
@@ -59,6 +91,15 @@ body {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.button-save {
+  background-color: #008cba;
 }
 
 .dot {
@@ -67,6 +108,35 @@ body {
   background-color: #f44336;
   border-radius: 50%;
   display: inline-block;
+}
+
+#room-lists {
+  width: 10rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 1rem;
+}
+
+#room-lists .record-cam {
+  font-family: "Quicksand", sans-serif;
+  width: 100%;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 1rem;
+}
+
+#room-lists .record-cam:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+#record-views {
+  width: 100%;
 }
 
 /* Screen larger than 800px? 2 column */
