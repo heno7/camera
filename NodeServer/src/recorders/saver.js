@@ -25,7 +25,7 @@ class Saver {
     const converterInput = converter.createInputStream({
       f: "image2pipe",
       vcodec: "mjpeg",
-      r: 30,
+      r: 25,
     });
     converter.createOutputToFile(this.store, {
       vcodec: "libx264",

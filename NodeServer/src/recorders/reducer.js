@@ -1,11 +1,12 @@
-const { execFile } = require("node:child_process");
 const fs = require("fs/promises");
-const helpers = require("./src/utils");
+const helpers = require("../utils");
 
 const path = require("path");
 const concat = require("ffmpeg-concat");
 
 // concat 3 mp4s together using 2 500ms directionalWipe transitions
+
+reducerVideos();
 
 async function reducerVideos() {
   const configs = await helpers.getConfigs();
@@ -63,14 +64,3 @@ async function reducer(videos, outputName) {
 async function deleteVideos(videos) {
   await Promise.all(videos.map((videoPath) => fs.unlink(videoPath)));
 }
-
-const CronJob = require("cron").CronJob;
-const job = new CronJob(
-  "*/1 * * * * ",
-  reducerVideos,
-  null,
-  true,
-  "Asia/Ho_Chi_Minh"
-);
-// Use this if the 4th param is default value(false)
-// job.start()

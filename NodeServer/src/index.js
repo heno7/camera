@@ -15,6 +15,9 @@ const recoders = require("./recorders");
   await recoders.init();
 })();
 
+// const { recordReducerJob } = require("./crons");
+// recordReducerJob.start();
+
 const app = express();
 
 const HTTPS_PORT = 443;

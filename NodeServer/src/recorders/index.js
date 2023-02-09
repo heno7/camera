@@ -16,9 +16,9 @@ module.exports = {
       // console.log(__dirname);
       this.listOfStores[camId] = path.join(
         path.resolve("store", `raw_store_${camId}`),
-        `${time}_${camId}.mp4`
+        `${time}.mp4`
       );
-      console.log(this.listOfStores[camId]);
+      // console.log(this.listOfStores[camId]);
       this.listOfFrameStreams[camId] = frameStreamFactory();
       this.listOfSaver[camId] = new Saver(
         this.listOfStores[camId],
