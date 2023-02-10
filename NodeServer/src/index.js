@@ -28,6 +28,8 @@ app.use(express.json());
 
 app.use(express.static(path.resolve(__dirname, "./new_clients")));
 
+app.use("/client/records/", express.static(path.resolve("./store", "")));
+
 app.use("/", router);
 
 app.use((err, req, res, next) => {
