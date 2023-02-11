@@ -9,22 +9,34 @@ window.addEventListener("load", async (e) => {
   getCamViews(config);
 });
 
+let ws;
+
 const WSS_URL = "wss://testfirst.ddns.net";
-const ws = new WebSocket(WSS_URL);
+ws = new WebSocket(WSS_URL);
 
 ws.onopen = () => {
   console.log(`Connected to ${WSS_URL}`);
   ws.send("WEB_CLIENT");
 };
 
-// const config = {
-//   1: "living room",
-//   2: "dining room",
-//   3: "yard",
-// };
+function onWsClosed() {
+  ws = new WebSocket(WSS_URL);
+  ws.onopen = () => {
+    console.log(`Connected to ${WSS_URL}`);
+    ws.send("WEB_CLIENT");
+  };
+  ws.onmessage = onWsMessage;
+  ws.onclose = onWsClosed;
+}
+
+ws.onclose = () => {
+  onWsClosed();
+  console.log("try to connect wss");
+};
 
 async function getConfigs() {
-  const url = `/client/configs`;
+  const tk = sessionStorage.getItem("tk");
+  const url = `/client/configs?tk=${tk}`;
   try {
     const response = await fetch(url);
     const config = await response.json();
@@ -86,12 +98,12 @@ function setFalseCamEnabler(config) {
 }
 
 function buttonFunc(source) {
-  var x = document.getElementById(source);
-  if (x.innerHTML === "Play") {
-    x.innerHTML = "Pause";
+  const x = document.getElementById(source);
+  if (x.textContent.trim() === "play") {
+    x.textContent = "pause";
     enableCams[source] = true;
   } else {
-    x.innerHTML = "Play";
+    x.textContent = "play";
     enableCams[source] = false;
   }
 }
@@ -107,7 +119,8 @@ function getCamViews(config) {
 
 let imageFrame, urlObject;
 
-ws.onmessage = async (message) => {
+ws.onmessage = onWsMessage;
+async function onWsMessage(message) {
   const arrayBuffer = message.data;
 
   const blobObj = new Blob([arrayBuffer]);
@@ -115,7 +128,7 @@ ws.onmessage = async (message) => {
   const uint8 = new Uint8Array(buf.slice(12, 13));
   let currentCam = uint8[0];
   if (currentCam < 10) currentCam = "0" + currentCam;
-  console.log("current Cam: ", currentCam);
+  // console.log("current Cam: ", currentCam);
 
   imageFrame = camViews[`image_${currentCam}`];
   document.getElementById(`cam_${currentCam}_red_dot`).style.visibility =
@@ -126,4 +139,46 @@ ws.onmessage = async (message) => {
   }
   urlObject = URL.createObjectURL(blobObj);
   imageFrame.src = urlObject;
-};
+}
+
+function saveFunc(source) {
+  let blobUrl;
+  const camId = source.slice(4, 6);
+  // console.log(camViews[`image_${camId}`]);
+  // console.log(camId);
+  blobUrl = camViews[`image_${camId}`].src;
+
+  if (blobUrl.indexOf("blob") == -1) {
+    return;
+  }
+  let fileName = getFomattedTime(window.config[camId]) + ".jpeg";
+  forceDownload(blobUrl, fileName);
+}
+
+function getFomattedTime(camInfo) {
+  var today = new Date();
+  var y = today.getFullYear();
+  var m = today.getMonth() + 1;
+  var d = today.getDate();
+  var h = today.getHours();
+  var mi = today.getMinutes();
+  var s = today.getSeconds();
+  return camInfo + "-" + y + "-" + m + "-" + d + "-" + h + "-" + mi + "-" + s;
+}
+
+function forceDownload(url, fileName) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.responseType = "blob";
+  xhr.onload = function () {
+    var urlCreator = window.URL || window.webkitURL;
+    var imageUrl = urlCreator.createObjectURL(this.response);
+    var tag = document.createElement("a");
+    tag.href = imageUrl;
+    tag.download = fileName;
+    document.body.appendChild(tag);
+    tag.click();
+    document.body.removeChild(tag);
+  };
+  xhr.send();
+}

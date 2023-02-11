@@ -23,12 +23,17 @@ const app = express();
 const HTTPS_PORT = 443;
 
 const router = require("./routes");
+const { authenticator } = require("./auth/auth.middleaware");
 
 app.use(express.json());
 
 app.use(express.static(path.resolve(__dirname, "./new_clients")));
 
-app.use("/client/records/", express.static(path.resolve("./store", "")));
+app.use(
+  "/client/records/",
+  authenticator,
+  express.static(path.resolve("./store", ""))
+);
 
 app.use("/", router);
 

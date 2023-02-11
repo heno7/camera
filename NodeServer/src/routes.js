@@ -7,7 +7,7 @@ const path = require("path");
 const { authenticator } = require("./auth/auth.middleaware");
 const helpers = require("./utils");
 
-// router.use(authenticator);
+router.use(authenticator);
 
 router.get("/client", (req, res) => {
   return res.sendFile(

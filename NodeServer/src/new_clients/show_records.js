@@ -99,11 +99,12 @@ function handlePlayRecords() {
   const recordViews = document.getElementById("record-views");
   recordViews.addEventListener("click", (e) => {
     const storeId = sessionStorage.getItem("currentCamId");
+    const tk = sessionStorage.getItem("tk");
     const videoMeta = e.target.getAttribute("id");
     // location.href = `/client/records/pro_store_${storeId}/${videoMeta}`;
     let html = `
     <video width="640" height="480" controls>
-      <source src="/client/records/pro_store_${storeId}/${videoMeta}" type="video/mp4">
+      <source src="/client/records/pro_store_${storeId}/${videoMeta}?tk=${tk}" type="video/mp4">
       Your browser does not support the video tag.
     </video>
     <button id='exit'>Exit</button>
@@ -125,7 +126,8 @@ function handleExit() {
 
 async function getRecordsMeta(camId) {
   try {
-    const response = await fetch("/client/records/meta");
+    const tk = sessionStorage.getItem("tk");
+    const response = await fetch(`/client/records/meta?tk=${tk}`);
     const data = await response.json();
     return data[camId];
   } catch (error) {

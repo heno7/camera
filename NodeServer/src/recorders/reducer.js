@@ -23,6 +23,9 @@ async function reducerVideos() {
 async function filterVideos(storePath) {
   const now = Date.now();
   const listOfVideoNames = await fs.readdir(storePath);
+  if (listOfVideoNames.length <= 1) {
+    process.exit(0);
+  }
   const lessThanNowVideoNames = listOfVideoNames
     .filter((videoName) => {
       const videoTime = parseInt(videoName.split(".")[0]);

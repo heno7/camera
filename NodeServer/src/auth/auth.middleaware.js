@@ -17,7 +17,9 @@ function handleTokenError(error, res) {
 module.exports = {
   authenticator: async (req, res, next) => {
     try {
-      const accessToken = req.query.tk;
+      let accessToken;
+      // if(!req.query.tk) accessToken = req.body.tk;
+      accessToken = req.query.tk;
       // console.log(req.query);
       // console.log(accessToken);
       if (!accessToken)
