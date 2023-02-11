@@ -75,6 +75,11 @@
       button:hover {
         background-color: rgba(99, 99, 99, 0.3);
       }
+
+      #message {
+        display: none;
+        margin-bottom: 1rem;
+      }
     </style>
   </head>
   <body>
@@ -83,7 +88,8 @@
       <form action="/auth/login" method="post">
         <label for="passcode">Enter your passcode:</label>
         <input type="text" name="passCode" id="passcode" />
-        <button type="submit">Submit</button>
+        <div id="message"></div>
+        <button type="submit" id="submit">Submit</button>
       </form>
     </div>
 
@@ -92,8 +98,8 @@
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
         try {
-          const passCode = document.getElementById("passcode").value;
-          console.log(passCode);
+          const passCodeInput = document.getElementById("passcode");
+          const passCode = passCodeInput.value;
           const result = await fetch("/auth/login", {
             method: "POST",
             headers: {
@@ -104,7 +110,30 @@
             }),
           });
           const data = await result.json();
-          console.log(data.tk);
+
+          if (!data.ok) {
+            const messageArea = document.getElementById("message");
+            messageArea.style.display = "block";
+            messageArea.textContent = data.message;
+            messageArea.style.color = "red";
+            const subBtn = document.getElementById("submit");
+            subBtn.disabled = true;
+            subBtn.style.backgroundColor = "rgba(99, 99, 99, 0.3)";
+            subBtn.style.cursor = "default";
+            passCodeInput.addEventListener("focus", (e) => {
+              messageArea.style.display = "none";
+              subBtn.disabled = false;
+              subBtn.style.backgroundColor = "rgba(99, 99, 99, 0.7)";
+              subBtn.style.cursor = "pointer";
+              subBtn.addEventListener("mouseover", (e) => {
+                subBtn.style.backgroundColor = "rgba(99, 99, 99, 0.3)";
+              });
+              subBtn.addEventListener("mouseout", (e) => {
+                subBtn.style.backgroundColor = "rgba(99, 99, 99, 0.7)";
+              });
+            });
+            return;
+          }
           window.location.href = `https://${data.domain}/client?tk=${data.tk}`;
         } catch (error) {}
       });

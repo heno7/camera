@@ -17,8 +17,16 @@ module.exports = {
         return res.status(400).json({ message: "Invalide phone number!" });
       const passCode = SMS.generatePassCode();
       await savePassCode(user.id, passCode);
-      await SMS.sendPassCode(phoneNumber, passCode);
+      const result = await SMS.sendPassCode(phoneNumber, passCode);
+      if (result.errorCode) {
+        return res.status(500).json({
+          ok: false,
+          message: "Failed to send sms. Please try in later!",
+        });
+      }
+
       return res.status(201).json({
+        ok: true,
         message: "We haved sent you a passcode. Please check your phone!",
       });
     } catch (error) {
@@ -31,7 +39,9 @@ module.exports = {
       const { passCode } = req.body;
       const isValidPassCode = await checkPassCode(passCode);
       if (!isValidPassCode) {
-        return res.status(401).json({ message: "Invalide passcode!" });
+        return res
+          .status(401)
+          .json({ ok: false, message: "Invalide passcode!" });
       }
 
       // console.log(isValidPassCode);
@@ -48,6 +58,7 @@ module.exports = {
       // console.log(user);
 
       return res.status(201).json({
+        ok: true,
         domain: user.homeServer.domain,
         tk: accessToken,
       });
