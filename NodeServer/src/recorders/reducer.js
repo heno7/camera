@@ -39,7 +39,10 @@ async function filterVideos(storePath) {
     path.join(storePath, video)
   );
   return reducer(
-    lessThanVideoPaths,
+    lessThanVideoPaths.slice(
+      0,
+      lessThanVideoPaths[lessThanVideoPaths.length - 1]
+    ),
     path.join(
       path.resolve(
         "store",

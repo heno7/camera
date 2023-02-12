@@ -8,6 +8,8 @@
 const char* ssid = "Trienngat";
 const char* password = "trienngat1234";
 const char* websocket_server_host = "wss://192.168.1.130:443/";
+// const char* websocket_server_host = "wss://testfirst.ddns.net/";
+
 
 // using namespace websockets;
 using namespace websockets2_generic;

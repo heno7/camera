@@ -25,7 +25,7 @@ module.exports = {
       if (!accessToken)
         return res.status(401).json({ message: "Access denied!" });
       const payload = await verifyPromise(accessToken, cert);
-      console.log(payload);
+      // console.log(payload);
       if (payload.homeServerId === serverId) {
         return next();
       }

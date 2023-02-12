@@ -111,11 +111,3 @@ function checkTypeOfClient(ws, data) {
     return "camera";
   }
 }
-
-// function runSaver() {
-//   if (connectedCameras.length > 0 && !saver.isSaving) {
-//     console.log("Hello");
-//     saver.save();
-//     saver.isSaving = true;
-//   }
-// }

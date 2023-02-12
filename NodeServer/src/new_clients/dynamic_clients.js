@@ -2,12 +2,16 @@ window.addEventListener("load", async (e) => {
   let params = new URL(document.location).searchParams;
   let tk = params.get("tk");
   sessionStorage.setItem("tk", tk);
+  await initNow();
+});
+
+async function initNow() {
   const config = await getConfigs();
   window.config = config;
   setFalseCamEnabler(config);
   renderCamViews(config);
   getCamViews(config);
-});
+}
 
 let ws;
 
@@ -21,9 +25,10 @@ ws.onopen = () => {
 
 function onWsClosed() {
   ws = new WebSocket(WSS_URL);
-  ws.onopen = () => {
+  ws.onopen = async () => {
     console.log(`Connected to ${WSS_URL}`);
     ws.send("WEB_CLIENT");
+    await initNow();
   };
   ws.onmessage = onWsMessage;
   ws.onclose = onWsClosed;
