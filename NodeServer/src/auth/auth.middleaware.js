@@ -3,10 +3,9 @@ const { promisify } = require("util");
 const verifyPromise = promisify(JWT.verify);
 const fs = require("fs");
 const path = require("path");
+const helpers = require("../utils");
 
 const cert = fs.readFileSync(path.resolve("src/auth", "public.pem")); // get public key
-
-const serverId = "123";
 
 function handleTokenError(error, res) {
   if (error.name === "TokenExpiredError") {
@@ -25,8 +24,8 @@ module.exports = {
       if (!accessToken)
         return res.status(401).json({ message: "Access denied!" });
       const payload = await verifyPromise(accessToken, cert);
-      // console.log(payload);
-      if (payload.homeServerId === serverId) {
+      const serverConfigs = await helpers.getServerConfigs();
+      if (payload.homeServerId === serverConfigs.serverId) {
         return next();
       }
       return res.status(401).json({ message: "Access denied!" });

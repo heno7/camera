@@ -20,6 +20,7 @@
     "ffmpeg-stream": "^0.7.0",
     "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.2",
+    "fs-extra": "^11.1.0",
     "greenlock-express": "^4.0.3",
     "javascript-binary-converter": "^1.0.0",
     "jsonwebtoken": "^9.0.0",

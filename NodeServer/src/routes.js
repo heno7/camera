@@ -7,7 +7,7 @@ const path = require("path");
 const { authenticator } = require("./auth/auth.middleaware");
 const helpers = require("./utils");
 
-router.use(authenticator);
+// router.use(authenticator);
 
 router.get("/client", (req, res) => {
   return res.sendFile(
@@ -15,9 +15,18 @@ router.get("/client", (req, res) => {
   );
 });
 
+router.get("/client/domain", async (req, res) => {
+  try {
+    const serverConfigs = await helpers.getServerConfigs();
+    return res.status(200).json({ domain: serverConfigs.serverDomain });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get("/client/configs", async (req, res, next) => {
   try {
-    const configs = await helpers.getConfigs();
+    const configs = await helpers.getCameraConfigs();
     return res.status(200).json(configs);
   } catch (error) {
     next(error);
@@ -27,7 +36,7 @@ router.get("/client/configs", async (req, res, next) => {
 router.post("/config", async (req, res, next) => {
   try {
     const config = req.body.config;
-    const newConfigs = await helpers.setConfigs(config);
+    const newConfigs = await helpers.setCameraConfigs(config);
     return res.status(200).json({ newConfigs });
   } catch (error) {
     next(error);
@@ -36,7 +45,7 @@ router.post("/config", async (req, res, next) => {
 
 router.get("/client/records/meta", async (req, res, next) => {
   try {
-    const configs = await helpers.getConfigs();
+    const configs = await helpers.getCameraConfigs();
     const response = {};
     for (let camId in configs) {
       const pathToStore = path.resolve("store", `pro_store_${camId}`);

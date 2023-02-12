@@ -18,29 +18,33 @@ class Saver {
   }
 
   async save(data) {
-    // create converter
-    console.log("Saving...");
-    const converter = new Converter();
-    // create input writable stream (the jpeg frames)
-    const converterInput = converter.createInputStream({
-      f: "image2pipe",
-      vcodec: "mjpeg",
-      r: 25,
-    });
-    converter.createOutputToFile(this.store, {
-      vcodec: "libx264",
-      pix_fmt: "yuv420p",
-    });
+    try {
+      // create converter
+      console.log("Saving...");
+      const converter = new Converter();
+      // create input writable stream (the jpeg frames)
+      const converterInput = converter.createInputStream({
+        f: "image2pipe",
+        vcodec: "mjpeg",
+        r: 25,
+      });
+      converter.createOutputToFile(this.store, {
+        vcodec: "libx264",
+        pix_fmt: "yuv420p",
+      });
 
-    const convertingFinished = converter.run();
-    this.stream.pipe(converterInput, { end: false });
-    this.stream.on("end", () => {
-      converterInput.end();
-      this.isSaving = false;
-    });
+      const convertingFinished = converter.run();
+      this.stream.pipe(converterInput, { end: false });
+      this.stream.on("end", () => {
+        converterInput.end();
+        this.isSaving = false;
+      });
 
-    await convertingFinished;
-    console.log("Done!");
+      await convertingFinished;
+      console.log("Done!");
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

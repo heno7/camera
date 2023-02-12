@@ -4,11 +4,6 @@ const https = require("https");
 const express = require("express");
 const { WebSocketServer } = require("ws");
 
-// const frameStream = require("./recorders/frameStream");
-// const Saver = require("./recorders/saver");
-
-// const saver = new Saver("camera.mp4", frameStream);
-
 const recoders = require("./recorders");
 
 (async () => {
@@ -69,7 +64,7 @@ wssServer.on("connection", (ws, req) => {
     connectedClients.forEach((ws, i) => {
       if (connectedClients[i] == ws && ws.readyState === ws.OPEN) {
         ws.send(data);
-        // frameStream.push(data);
+
         // recoders.routing(data);
       } else {
         connectedClients.splice(i, 1);
@@ -85,7 +80,7 @@ wssServer.on("connection", (ws, req) => {
       return;
     }
     console.log("A camera is disconnected!");
-    // frameStream.push(null);
+
     recoders.close(connectedCameras);
   });
 
@@ -105,7 +100,7 @@ function checkTypeOfClient(ws, data) {
     // console.log(ws.camId);
     connectedCameras.push(ws);
     console.log("Camera connected");
-    // runSaver();
+
     recoders.setDuration(60 * 1000, connectedCameras).run(connectedCameras);
     // recoders.run(connectedCameras);
     return "camera";

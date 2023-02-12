@@ -1,4 +1,5 @@
 const path = require("path");
+const fse = require("fs-extra");
 const helpers = require("../utils");
 const frameStreamFactory = require("./frameStream");
 const Saver = require("./saver");
@@ -8,8 +9,26 @@ module.exports = {
   listOfFrameStreams: {},
   listOfSaver: {},
   isRunning: false,
+
+  async initStore() {
+    const pathToStore = path.resolve("store");
+    console.log(pathToStore);
+    const camConfigs = await helpers.getCameraConfigs();
+    let listPros = [];
+    for (let camId in camConfigs) {
+      listPros.push(
+        fse.ensureDir(path.join(pathToStore, `raw_store_${camId}`))
+      );
+      listPros.push(
+        fse.ensureDir(path.join(pathToStore, `pro_store_${camId}`))
+      );
+    }
+    await Promise.all(listPros);
+  },
+
   async init() {
-    const configs = await helpers.getConfigs();
+    const configs = await helpers.getCameraConfigs();
+    await this.initStore();
     for (let camId in configs) {
       const time = Date.now();
       // console.log(__filename);

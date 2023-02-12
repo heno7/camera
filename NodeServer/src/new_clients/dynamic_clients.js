@@ -1,27 +1,58 @@
+let ws;
+
 window.addEventListener("load", async (e) => {
   let params = new URL(document.location).searchParams;
   let tk = params.get("tk");
   sessionStorage.setItem("tk", tk);
+  const domainServer = await getDomain();
+  window.domainServer = domainServer;
+  const WSS_URL = `wss://${window.domainServer}`;
+  ws = new WebSocket(WSS_URL);
+  firstInitWebsocket(ws);
   await initNow();
 });
 
 async function initNow() {
-  const config = await getConfigs();
+  const config = await getCameraConfigs();
   window.config = config;
   setFalseCamEnabler(config);
   renderCamViews(config);
   getCamViews(config);
 }
 
-let ws;
+async function getDomain() {
+  try {
+    const tk = sessionStorage.getItem("tk");
+    const result = await fetch(`/client/domain?tk=${tk}`);
+    const data = await result.json();
+    if (data.domain) return data.domain;
+    throw new Error("Invalid domain!");
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-const WSS_URL = "wss://testfirst.ddns.net";
-ws = new WebSocket(WSS_URL);
+// const WSS_URL = `wss://${window.domainServer}`;
+// ws = new WebSocket(WSS_URL);
 
-ws.onopen = () => {
-  console.log(`Connected to ${WSS_URL}`);
-  ws.send("WEB_CLIENT");
-};
+function firstInitWebsocket(ws) {
+  ws.onopen = () => {
+    // console.log(`Connected to ${WSS_URL}`);
+    ws.send("WEB_CLIENT");
+  };
+
+  ws.onclose = () => {
+    onWsClosed();
+    console.log("try to connect wss");
+  };
+
+  ws.onmessage = onWsMessage;
+}
+
+// ws.onopen = () => {
+//   console.log(`Connected to ${WSS_URL}`);
+//   ws.send("WEB_CLIENT");
+// };
 
 function onWsClosed() {
   ws = new WebSocket(WSS_URL);
@@ -34,12 +65,12 @@ function onWsClosed() {
   ws.onclose = onWsClosed;
 }
 
-ws.onclose = () => {
-  onWsClosed();
-  console.log("try to connect wss");
-};
+// ws.onclose = () => {
+//   onWsClosed();
+//   console.log("try to connect wss");
+// };
 
-async function getConfigs() {
+async function getCameraConfigs() {
   const tk = sessionStorage.getItem("tk");
   const url = `/client/configs?tk=${tk}`;
   try {
@@ -124,7 +155,7 @@ function getCamViews(config) {
 
 let imageFrame, urlObject;
 
-ws.onmessage = onWsMessage;
+// ws.onmessage = onWsMessage;
 async function onWsMessage(message) {
   const arrayBuffer = message.data;
 
