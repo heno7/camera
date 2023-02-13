@@ -10,6 +10,7 @@ window.addEventListener("load", async (e) => {
   ws = new WebSocket(WSS_URL);
   firstInitWebsocket(ws);
   await initNow();
+  runRealTime();
 });
 
 async function initNow() {
@@ -217,4 +218,19 @@ function forceDownload(url, fileName) {
     document.body.removeChild(tag);
   };
   xhr.send();
+}
+
+function runRealTime() {
+  const timmer = document.getElementById("time");
+  const format = (time) => {
+    if (time < 10) return "0" + time;
+    return time;
+  };
+  setInterval(() => {
+    const now = new Date();
+    const hour = now.getHours();
+    const minute = now.getMinutes();
+    const second = now.getSeconds();
+    timmer.textContent = `${format(hour)}:${format(minute)}:${format(second)}`;
+  }, 1000);
 }
